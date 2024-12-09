@@ -1,8 +1,10 @@
 import argparse
 import os
 import time
+from openai import OpenAI
 import whisper_script
 import sentiments_script
+import prompt_script
 
 def main():
     # argument handling
@@ -35,6 +37,7 @@ def main():
     if "segments" in transcription_results:
         output_transcription = (args.file).split('.', 1)[0] + '.txt' # extract file name
         whisper_script.save_segments_to_file(transcription_results["segments"], output_transcription)
+        print("\n=== Transcription Complete ===")
         print(f"Transcription saved to: {output_transcription}")
         if args.verbose:
             print(f'Detected language: {detected_language}')
@@ -54,9 +57,10 @@ def main():
         if not api_key:
             print(f"Please set the OPENAI_API_KEY environment variable")
             return
-        
+        client = OpenAI(api_key=api_key)
+
         # Initialize generator
-        analyzer = sentiments_script.LyricAnalyzer(api_key, detected_language)
+        analyzer = sentiments_script.LyricAnalyzer(client, detected_language)
             # Analyze lyrics
         try:
             start = time.time()
@@ -75,8 +79,19 @@ def main():
     ###################################
     #        Prompt Generation        #
     ###################################
-    if (args.depth > 2):
-        return
+    if (args.depth > 2): # currently does not actually use sentiment, needs updating
+        try:
+            start = time.time()
+            prompt = prompt_script.generate_art_prompt(client, semantics_results['original_lyrics'], semantics_results['detailed_analysis'], "gpt-3.5-turbo")
+            end = time.time()
+            print("\n=== Prompt Generation Complete ===")
+            print(f"Time taken: {end-start}")
+            if args.verbose:
+                print("--------------------")
+                print(prompt)
+                print("--------------------")
+        except Exception as e:
+            print(f"\nError: {str(e)}")
     
     ###################################
     #         Image Generation        #

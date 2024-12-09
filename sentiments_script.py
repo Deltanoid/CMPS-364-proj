@@ -5,9 +5,9 @@ from datetime import datetime
 from pathlib import Path
 
 class LyricAnalyzer:
-    def __init__(self, openai_api_key, language='unspecified'):
+    def __init__(self, client, language='unspecified'):
         """Initialize with OpenAI API key and sentiment analyzer."""
-        self.client = OpenAI(api_key=openai_api_key)
+        self.client = client
         
         #ISO 639-1 two-letter language codes
         if (language == 'en'):

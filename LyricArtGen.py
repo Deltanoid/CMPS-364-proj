@@ -60,6 +60,10 @@ Make the analysis rich and specific, but keep each point concise."""
         except Exception as e:
             raise Exception(f"Error in GPT analysis: {str(e)}")
 
+
+############################################################################
+
+
     def generate_art_prompt(self, text, analysis_results):
         """Generate an art prompt based on the analysis."""
         prompt = f"""Based on this lyrical analysis, create an artistic prompt for DALL-E.
