@@ -11,6 +11,7 @@ def main():
     parser.add_argument("--model", type=str, default="turbo", help="Whisper model to use (small, medium, large, turbo).")
     parser.add_argument("--output", type=str, help="Path to save the transcription.")
     parser.add_argument("--depth", type=int, default=4, help="Layers to stop at (1: whisper, 2: semantics, 3: prompt, 4: image)")
+    parser.add_argument("-v","--verbose", action='store_true', help="print the transcribed lyrics")
 
     args = parser.parse_args()
     print(f"file: {args.file}")
@@ -34,7 +35,7 @@ def main():
         if args.output:
             save_segments_to_file(result["segments"], args.output)
             print(f"Transcription saved to: {args.output}")
-        else:
+        if args.verbose:
             for segment in result["segments"]:
                 start = segment['start']
                 end = segment['end']
