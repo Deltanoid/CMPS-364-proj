@@ -1,20 +1,14 @@
 import whisper
 
-def transcribe_audio(file_path, model_name="base"): 
+def transcribe_audio(file_path, model_name="turbo"): 
     """
-    Transcribe an audio file using Whisper.
-
     Args:
         file_path (str): Path to the audio file to transcribe.
-        model_name (str): Whisper model to use (e.g., "tiny", "base", "small", "medium", "large").
-
+        model_name (str): Whisper model to use ("small", "medium", "large", "turbo").
     Returns:
         dict: The transcription result containing keys like 'text', 'segments', etc.
     """
-    # Load the Whisper model
     model = whisper.load_model(model_name)
-
-    # Transcribe the audio file
     result = model.transcribe(file_path)
     return result
 

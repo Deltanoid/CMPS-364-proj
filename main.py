@@ -1,7 +1,7 @@
 import argparse
 import os
 import time
-from whisper_script import *
+import whisper_script
 import sentiments_script
 
 def main():
@@ -26,17 +26,19 @@ def main():
     ###################################
     start = time.time()
     print(f"Loading model: {args.model}")
-    result = transcribe_audio(args.file, model_name=args.model)
+    transcription_results = whisper_script.transcribe_audio(args.file, model_name=args.model)
     end = time.time()
     print(f'\ntime taken: {end-start}\n')
+    detected_language = transcription_results.get('language')
 
-    # Print and optionally save the transcription
-    if "segments" in result:
+    # Print and save the transcription
+    if "segments" in transcription_results:
         output_transcription = (args.file).split('.', 1)[0] + '.txt' # extract file name
-        save_segments_to_file(result["segments"], output_transcription)
+        whisper_script.save_segments_to_file(transcription_results["segments"], output_transcription)
         print(f"Transcription saved to: {output_transcription}")
         if args.verbose:
-            for segment in result["segments"]:
+            print(f'Detected language: {detected_language}')
+            for segment in transcription_results["segments"]:
                 start = segment['start']
                 end = segment['end']
                 text = segment['text']
@@ -54,23 +56,21 @@ def main():
             return
         
         # Initialize generator
-        analyzer = sentiments_script.LyricAnalyzer(api_key)
+        analyzer = sentiments_script.LyricAnalyzer(api_key, detected_language)
             # Analyze lyrics
         try:
             start = time.time()
-            results = analyzer.analyze_lyrics()
+            semantics_results = analyzer.analyze_lyrics()
             end = time.time()
             
             # Print results summary
             print("\n=== Analysis Complete ===")
             print(f"Time taken: {end-start}")
-            print(f"Sentiment: {results['hugging_sentiment']}") 
+            print(f"Sentiment: {semantics_results['hugging_sentiment']}") 
             print(f"\nFull analysis results saved to: {analyzer.output_dir}")
         except Exception as e:
             print(f"\nError: {str(e)}")
             print("Check the generated JSON file for details.")
-
-        return
     
     ###################################
     #        Prompt Generation        #
