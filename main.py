@@ -5,6 +5,7 @@ from openai import OpenAI
 import whisper_script
 import sentiments_script
 import prompt_script
+import art_script
 
 def main():
     # argument handling
@@ -97,7 +98,15 @@ def main():
     #         Image Generation        #
     ###################################
     if (args.depth > 3):
-        return
-
+        try:
+            start = time.time()
+            img_path = art_script.generate_image_with_dalle(prompt, client, output_transcription[:-4])
+            end = time.time()
+            print("\n=== Image Generation Complete ===")
+            print(f"Time taken: {end-start}")
+            print(f"Image path: {img_path}")
+        except Exception as e:
+            print(f"\nError: {str(e)}")
+            
 if __name__ == '__main__':
     main()

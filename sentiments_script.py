@@ -1,4 +1,3 @@
-from openai import OpenAI
 from transformers import pipeline
 import json
 from datetime import datetime
