@@ -2,6 +2,7 @@ import argparse
 import os
 import time
 from whisper_script import *
+from LyricArtGen import LyricArtGenerator
 
 def main():
     # argument handling
@@ -19,12 +20,15 @@ def main():
         print(f"Error: File not found: {args.file}")
         return
 
-    # Transcribe the audio file
+    ###################################
+    #          Transcription          #
+    ###################################
     start = time.time()
     print(f"Loading model: {args.model}")
     result = transcribe_audio(args.file, model_name=args.model)
     end = time.time()
     print(f'\ntime taken: {end-start}\n')
+
     # Print and optionally save the transcription
     if "segments" in result:
         if args.output:
@@ -39,14 +43,28 @@ def main():
     else:
         print("No transcription segments found.")
     
-    
-    # semantic analysis
+    ###################################
+    #        Semantic Analysis        #
+    ###################################
     if (args.depth > 1):
+        api_key = os.getenv('OPENAI_API_KEY') # Get API key from environment variable for security
+        if not api_key:
+            print(f"Please set the OPENAI_API_KEY environment variable")
+            return
+        
+        # Initialize generator
+        generator = LyricArtGenerator(api_key)
         return
-    # prompt generation
+    
+    ###################################
+    #        Prompt Generation        #
+    ###################################
     if (args.depth > 2):
         return
-    # image generation
+    
+    ###################################
+    #         Image Generation        #
+    ###################################
     if (args.depth > 3):
         return
 
