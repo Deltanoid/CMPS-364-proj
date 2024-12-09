@@ -2,14 +2,14 @@ import argparse
 import os
 import time
 from whisper_script import *
-from LyricArtGen import LyricArtGenerator
+import sentiments_script
 
 def main():
     # argument handling
     parser = argparse.ArgumentParser(description="Transcribe audio files using OpenAI's Whisper model.")
     parser.add_argument("file", type=str, help="Path to the audio file.")
     parser.add_argument("--model", type=str, default="turbo", help="Whisper model to use (small, medium, large, turbo).")
-    parser.add_argument("--output", type=str, help="Path to save the transcription.")
+    # parser.add_argument("--output", type=str, help="Path to save the transcription.")
     parser.add_argument("--depth", type=int, default=4, help="Layers to stop at (1: whisper, 2: semantics, 3: prompt, 4: image)")
     parser.add_argument("-v","--verbose", action='store_true', help="print the transcribed lyrics")
 
@@ -32,9 +32,9 @@ def main():
 
     # Print and optionally save the transcription
     if "segments" in result:
-        if args.output:
-            save_segments_to_file(result["segments"], args.output)
-            print(f"Transcription saved to: {args.output}")
+        output_transcription = (args.file).split('.', 1)[0] + '.txt' # extract file name
+        save_segments_to_file(result["segments"], output_transcription)
+        print(f"Transcription saved to: {output_transcription}")
         if args.verbose:
             for segment in result["segments"]:
                 start = segment['start']
@@ -54,7 +54,22 @@ def main():
             return
         
         # Initialize generator
-        generator = LyricArtGenerator(api_key)
+        analyzer = sentiments_script.LyricAnalyzer(api_key)
+            # Analyze lyrics
+        try:
+            start = time.time()
+            results = analyzer.analyze_lyrics()
+            end = time.time()
+            
+            # Print results summary
+            print("\n=== Analysis Complete ===")
+            print(f"Time taken: {end-start}")
+            print(f"Sentiment: {results['hugging_sentiment']}") 
+            print(f"\nFull analysis results saved to: {analyzer.output_dir}")
+        except Exception as e:
+            print(f"\nError: {str(e)}")
+            print("Check the generated JSON file for details.")
+
         return
     
     ###################################

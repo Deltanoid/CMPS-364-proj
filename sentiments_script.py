@@ -36,8 +36,8 @@ class LyricAnalyzer:
             with open(file_path, 'r', encoding='cp1252') as file:
                 return file.read()
 
-    def get_english_sentiment(self, text):
-        """Get sentiment using English-specific model."""
+    def get_sentiment(self, text):
+        """Get sentiment using previously determined model."""
         results = self.sentiment_pipeline(text, truncation=True)
         return results[0] if results else None
 
@@ -71,7 +71,7 @@ Make the analysis rich and specific, but keep each point concise."""
         except Exception as e:
             raise Exception(f"Error in GPT analysis: {str(e)}")
 
-    def analyze_lyrics(self, file_path):
+    def analyze_lyrics(self,file_path):
         """Complete semantic analysis pipeline."""
         results = {
             'timestamp': datetime.now().isoformat(),
@@ -79,13 +79,12 @@ Make the analysis rich and specific, but keep each point concise."""
         }
         
         try:
-            # Read lyrics
             lyrics = self.read_lyrics(file_path)
             results['original_lyrics'] = lyrics
             
             # Get English sentiment
-            sentiment = self.get_english_sentiment(lyrics)
-            results['english_sentiment'] = sentiment
+            sentiment = self.get_sentiment(lyrics)
+            results['hugging_sentiment'] = sentiment
             
             # Get GPT analysis
             gpt_analysis = self.analyze_with_gpt(lyrics)
@@ -108,31 +107,3 @@ Make the analysis rich and specific, but keep each point concise."""
         
         with open(results_path, 'w', encoding='utf-8') as f:
             json.dump(results, f, ensure_ascii=False, indent=2)
-
-
-def main():
-    # Get API key from environment variable for security
-    api_key = os.getenv('OPENAI_API_KEY')
-    if not api_key:
-        raise ValueError("Please set the OPENAI_API_KEY environment variable")
-    
-    # Initialize analyzer
-    analyzer = LyricAnalyzer(api_key)
-    
-    # Analyze lyrics
-    try:
-        results = analyzer.analyze_lyrics("feiruz - Le Beirut.txt")
-        
-        # Print results summary
-        print("\n=== Analysis Complete ===")
-        print(f"Input file: {results['input_file']}")
-        print(f"Sentiment: {results['english_sentiment']}")
-        print(f"\nFull analysis results saved to: {analyzer.output_dir}")
-        
-    except Exception as e:
-        print(f"\nError: {str(e)}")
-        print("Check the generated JSON file for details.")
-
-
-if __name__ == "__main__":
-    main()
