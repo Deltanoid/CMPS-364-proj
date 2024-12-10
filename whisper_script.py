@@ -1,6 +1,6 @@
 import whisper
 
-def transcribe_audio(file_path, model_name="turbo"): 
+def transcribe_audio(file_path, model_name="turbo", device="cuda"): 
     """
     Args:
         file_path (str): Path to the audio file to transcribe.
@@ -8,7 +8,7 @@ def transcribe_audio(file_path, model_name="turbo"):
     Returns:
         dict: The transcription result containing keys like 'text', 'segments', etc.
     """
-    model = whisper.load_model(model_name)
+    model = whisper.load_model(model_name, device=device)
     result = model.transcribe(file_path)
     return result
 
