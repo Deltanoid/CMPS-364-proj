@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import requests
 
 def generate_image_with_dalle(art_prompt, client, output_dir):
@@ -23,7 +23,7 @@ def generate_image_with_dalle(art_prompt, client, output_dir):
 
         # Download and save the image
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        image_path = f"{output_dir}_{timestamp}.png"
+        image_path = f"image_results/{output_dir}_{timestamp}.png"
         
         # Download image
         response = requests.get(image_url)

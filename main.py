@@ -54,10 +54,11 @@ def main():
     #        Semantic Analysis        #
     ###################################
     if (args.depth > 1):
-        api_key = os.getenv('OPENAI_API_KEY') # Get API key from environment variable for security
-        if not api_key:
-            print(f"Please set the OPENAI_API_KEY environment variable")
-            return
+        # api_key = os.getenv('OPENAI_API_KEY') # Get API key from environment variable for security
+        # if not api_key:
+        #     print(f"Please set the OPENAI_API_KEY environment variable")
+        #     return
+        api_key = get_api_key()
         client = OpenAI(api_key=api_key)
 
         # Initialize generator
@@ -65,7 +66,7 @@ def main():
             # Analyze lyrics
         try:
             start = time.time()
-            semantics_results = analyzer.analyze_lyrics()
+            semantics_results = analyzer.analyze_lyrics(output_transcription)
             end = time.time()
             
             # Print results summary
@@ -107,6 +108,18 @@ def main():
             print(f"Image path: {img_path}")
         except Exception as e:
             print(f"\nError: {str(e)}")
-            
+
+def get_api_key(file_path="api_key.txt"):
+    try:
+        with open(file_path, "r") as file:
+            first_line = file.readline().strip()  # Read and strip any leading/trailing whitespace
+            return first_line
+    except FileNotFoundError:
+        print(f"Error: The file '{file_path}' was not found.")
+        return None
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+   
 if __name__ == '__main__':
     main()

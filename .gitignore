@@ -2,3 +2,6 @@
 *.mp3
 *.pyc
 *.txt
+analysis_results/
+image_results/
+*.Identifier
