@@ -6,4 +6,5 @@ analysis_results/
 image_results/
 original_lyrics/
 songs/
+lyric_results/
 *.Identifier

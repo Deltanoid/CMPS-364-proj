@@ -1,6 +1,7 @@
 # for manipulating the all_songs_data.json and assosciated files
 import json
 import re # regular expressions
+import os
 
 def save_song_details(json_data):
     artist = json_data["Artist"]
@@ -32,8 +33,28 @@ def save_song_details(json_data):
 
     print(f"File saved as: {file_name}")
 
+def save_links(folder_path = 'original_lyrics/'): # go through current files in original_lyrics/ and extract the links to a seprate file
+    try:
+        # Get a list of all files in the folder
+        files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
+        links = []
+        for fname in files:
+            file_path = os.path.join(folder_path, fname)
+            with open(file_path) as f:
+                first_line = f.readline().strip()
+                links.append((fname, first_line))
+        with open('links.txt',"w", encoding="utf-8") as f:
+            for tup in links:
+                f.write(tup[0] + " " + tup[1] +"\n")
+        print("Extraced and saved links.")
+        return
+    except FileNotFoundError:
+        print(f"Error: The folder '{folder_path}' does not exist.")
+        return []
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return []
 
-# import os
 # os.chdir('C:\\Users\\alimo\\Desktop')
 def driver(fname, limit = 20):
     with open(fname) as f:
@@ -51,3 +72,4 @@ def driver(fname, limit = 20):
 if __name__=='__main__':
     fname = 'all_songs_data.json'
     #driver(fname,100)
+    save_links()
