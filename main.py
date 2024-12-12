@@ -36,7 +36,7 @@ def main():
 
     # Print and save the transcription
     if "segments" in transcription_results:
-        output_transcription = (args.file).split('.', 1)[0] + '.txt' # extract file name
+        output_transcription = (args.file).split('.', 1)[0].split('songs/')[-1] + '.txt' # extract file name
         whisper_script.save_segments_to_file(transcription_results["segments"], output_transcription)
         print("\n=== Transcription Complete ===")
         print(f"Transcription saved to: {output_transcription}")
