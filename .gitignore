@@ -4,4 +4,6 @@
 *.txt
 analysis_results/
 image_results/
+original_lyrics/
+songs/
 *.Identifier
