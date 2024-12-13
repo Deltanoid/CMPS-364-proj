@@ -43,7 +43,7 @@ def main():
 
     # Print and save the transcription
     if "segments" in transcription_results:
-        song_name = (args.file).split('.', 1)[0].split('/')[-1]
+        song_name = (args.file).split('.txt', 1)[0].split('/')[-1]
         output_transcription = f'lyric_results/{song_name}_({args.model}).txt'
         whisper_script.save_segments_to_file(transcription_results["segments"], output_transcription)
         print("\n=== Transcription Complete ===")
