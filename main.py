@@ -19,6 +19,7 @@ def main():
     parser.add_argument("--depth", type=int, default=4, help="Layers to stop at (1: whisper, 2: semantics, 3: prompt, 4: image)")
     parser.add_argument("-v","--verbose", action='store_true', help="print the transcribed lyrics")
     parser.add_argument("-w","--warnings", action='store_true', help="unsuppress warnings")
+    parser.add_argument("--mode", type=str, default="lyrical", help="lyrical, instrumental, or hybrid")
     args = parser.parse_args()
 
     if not args.warnings:

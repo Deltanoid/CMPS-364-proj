@@ -160,19 +160,20 @@ class AudioAnalysis:
 
 if __name__ == "__main__":
     # Example usage
-    song_path = r"C:\Los.mp3"
+    song_path = "songs/Psychostick - I Can Only Count to FOUR.mp3"
     audio_analysis = AudioAnalysis(song_path)
 
     # Convert MP3 to WAV
     audio_analysis.convert_mp3_to_wav()
+    print("conversion complete")
 
     # Transcribe audio to text
-    lyrics = audio_analysis.transcribe_audio()
-    print("Transcribed Lyrics:", lyrics)
+    # lyrics = audio_analysis.transcribe_audio()
+    # print("Transcribed Lyrics:", lyrics)
 
     # Analyze emotions from lyrics
-    emotions = audio_analysis.analyze_emotion(lyrics)
-    print("Emotions:", emotions)
+    # emotions = audio_analysis.analyze_emotion(lyrics)
+    # print("Emotions:", emotions)
 
     # Create and save Mel Spectrogram
     audio_analysis.create_mel_spectrogram()
