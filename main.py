@@ -1,6 +1,7 @@
 import argparse
 import os
 import time
+import warnings
 from openai import OpenAI
 import whisper_script
 import sentiments_script
@@ -8,6 +9,8 @@ import prompt_script
 import art_script
 
 def main():
+
+
     # argument handling
     parser = argparse.ArgumentParser(description="Transcribe audio files using OpenAI's Whisper model.")
     parser.add_argument("file", type=str, help="Path to the audio file.")
@@ -15,9 +18,14 @@ def main():
     # parser.add_argument("--output", type=str, help="Path to save the transcription.")
     parser.add_argument("--depth", type=int, default=4, help="Layers to stop at (1: whisper, 2: semantics, 3: prompt, 4: image)")
     parser.add_argument("-v","--verbose", action='store_true', help="print the transcribed lyrics")
-
+    parser.add_argument("-w","--warnings", action='store_true', help="unsuppress warnings")
     args = parser.parse_args()
-    print(f"file: {args.file}")
+
+    if not args.warnings:
+        print("\n\nNote: Certain warnings are suppressed!")
+        warnings.filterwarnings("ignore")
+
+    print(f"\n\nfile: {args.file}")
 
     # Check if the file exists
     if not os.path.isfile(args.file):
@@ -31,7 +39,6 @@ def main():
     print(f"Loading model: {args.model}")
     transcription_results = whisper_script.transcribe_audio(args.file, model_name=args.model)
     end = time.time()
-    print(f'\ntime taken: {end-start}\n')
     detected_language = transcription_results.get('language')
 
     # Print and save the transcription
@@ -40,6 +47,7 @@ def main():
         output_transcription = f'lyric_results/{song_name}_({args.model}).txt'
         whisper_script.save_segments_to_file(transcription_results["segments"], output_transcription)
         print("\n=== Transcription Complete ===")
+        print(f'\ntime taken: {end-start}\n')
         print(f"Transcription saved to: {'lyric_results/'+output_transcription}")
         if args.verbose:
             print(f'Detected language: {detected_language}')
