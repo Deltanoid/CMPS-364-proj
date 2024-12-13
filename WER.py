@@ -52,6 +52,14 @@ def load_lyrics(folder_path='original_lyrics', models = ['small','turbo','large'
                     cleaned_lines.append(line.strip()) # strip leading/trailing whitespace
 
                 lyrics[model] = " ".join(cleaned_lines)
+            # if fname == 'Ritchie Valens - Donna':
+            #     print(lyrics['original'])
+            #     print()
+            #     print(lyrics['small'])
+            #     print()
+            #     print(lyrics['turbo'])
+            #     print()
+            #     return
             for model in models:
                 word_e, char_e = calculate_wer(lyrics['original'],lyrics[model])
                 model_scores[model] = (word_e, char_e)

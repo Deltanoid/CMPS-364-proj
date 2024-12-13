@@ -110,7 +110,7 @@ def main():
     if (args.depth > 3):
         try:
             start = time.time()
-            img_path = art_script.generate_image_with_dalle(prompt, client, output_transcription[:-4])
+            img_path = art_script.generate_image_with_dalle(prompt, client, song_name)
             end = time.time()
             print("\n=== Image Generation Complete ===")
             print(f"Time taken: {end-start}")
