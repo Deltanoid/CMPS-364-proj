@@ -1,12 +1,14 @@
 import argparse
 import os
 import time
+import numpy as np
 import warnings
 from openai import OpenAI
 import whisper_script
 import sentiments_script
 import prompt_script
 import art_script
+import instrumentals_script
 
 def main():
 
@@ -33,32 +35,61 @@ def main():
         print(f"Error: File not found: {args.file}")
         return
 
+
     ###################################
     #          Transcription          #
     ###################################
-    start = time.time()
-    print(f"Loading model: {args.model}")
-    transcription_results = whisper_script.transcribe_audio(args.file, model_name=args.model)
-    end = time.time()
-    detected_language = transcription_results.get('language')
+    
+    # lyrics
+    if (args.mode == 'lyrical' or args.mode == 'hybrid'):
+        start = time.time()
+        print(f"Loading model: {args.model}")
+        transcription_results = whisper_script.transcribe_audio(args.file, model_name=args.model)
+        end = time.time()
+        detected_language = transcription_results.get('language')
 
-    # Print and save the transcription
-    if "segments" in transcription_results:
-        song_name = (args.file).split('.txt', 1)[0].split('/')[-1]
-        output_transcription = f'lyric_results/{song_name}_({args.model}).txt'
-        whisper_script.save_segments_to_file(transcription_results["segments"], output_transcription)
+        # Print and save the transcription
+        if "segments" in transcription_results:
+            song_name = (args.file).split('.txt', 1)[0].split('/')[-1]
+            output_transcription = f'lyric_results/{song_name}_({args.model}).txt'
+            whisper_script.save_segments_to_file(transcription_results["segments"], output_transcription)
+            print("\n=== Transcription Complete ===")
+            print(f'\ntime taken: {end-start}\n')
+            print(f"Transcription saved to: {'lyric_results/'+output_transcription}")
+            if args.verbose:
+                print(f'Detected language: {detected_language}')
+                for segment in transcription_results["segments"]:
+                    start = segment['start']
+                    end = segment['end']
+                    text = segment['text']
+                    print(f"[{start:.2f} --> {end:.2f}] {text}")
+        else:
+            print("No transcription segments found.")
+
+    # background music
+    if (args.mode == 'instrumental' or args.mode == 'hybrid'):
+        audio_analizer = instrumentals_script.AudioAnalysis(args.file)
+
+        start = time.time()
+        audio_analizer.convert_mp3_to_wav()
+        end = time.time()
+        print(f"Conversion from mp3 to wav completed in {end - start} seconds.")
+
+        start = time.time()
+        audio_analizer.create_mel_spectrogram(f'spectograms/{song_name}.png')
+        end = time.time()
+        print(f"mel spectogram created in {end-start} seconds")
+
+        start = time.time()
+        audi_features = audio_analizer.analyze(args.verbose)
+        end = time.time()
         print("\n=== Transcription Complete ===")
-        print(f'\ntime taken: {end-start}\n')
-        print(f"Transcription saved to: {'lyric_results/'+output_transcription}")
+        print(f"song features extarcted in {end - start} seconds")
         if args.verbose:
-            print(f'Detected language: {detected_language}')
-            for segment in transcription_results["segments"]:
-                start = segment['start']
-                end = segment['end']
-                text = segment['text']
-                print(f"[{start:.2f} --> {end:.2f}] {text}")
-    else:
-        print("No transcription segments found.")
+            for feature_name, feature_values in audi_features.items():
+                print(f"{feature_name}: {feature_values.shape if isinstance(feature_values, np.ndarray) else feature_values}")
+
+
     
     ###################################
     #        Semantic Analysis        #

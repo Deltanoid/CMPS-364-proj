@@ -132,9 +132,6 @@ class AudioAnalysis:
         # Extract audio features
         features = self.extract_audio_features(mel_spectrogram, sr)
 
-        for feature_name, feature_values in features.items():
-            print(f"{feature_name}: {feature_values.shape if isinstance(feature_values, np.ndarray) else feature_values}")
-
         return features
 
 
