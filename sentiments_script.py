@@ -112,7 +112,7 @@ Make the analysis rich and specific, but keep each point concise."""
                     }
                 }
             )
-
+            # print("analyze with gpt end reason:", response.choices[0].message.content)
             return response
 
         except Exception as e:
@@ -137,6 +137,9 @@ Make the analysis rich and specific, but keep each point concise."""
             
             # Get GPT analysis
             gpt_analysis = self.analyze_with_gpt(lyrics)
+            # print("detailed analysis")
+            # print(gpt_analysis)
+            gpt_analysis = gpt_analysis.choices[0].message.content
             results['detailed_analysis'] = gpt_analysis
             
             # Save analysis results
