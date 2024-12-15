@@ -96,7 +96,7 @@ def main():
     ###################################
     #        Semantic Analysis        #
     ###################################
-    if (args.depth > 1):
+    if (args.depth > 1 and (args.mode == 'lyrical' or args.mode == 'hybrid')):
         # api_key = os.getenv('OPENAI_API_KEY') # Get API key from environment variable for security
         # if not api_key:
         #     print(f"Please set the OPENAI_API_KEY environment variable")
