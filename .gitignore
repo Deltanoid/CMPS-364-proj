@@ -7,4 +7,6 @@ image_results/
 original_lyrics/
 songs/
 lyric_results/
+spectograms/
 *.Identifier
+*.png

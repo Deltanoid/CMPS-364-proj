@@ -34,6 +34,7 @@ def main():
     if not os.path.isfile(args.file):
         print(f"Error: File not found: {args.file}")
         return
+    song_name = (args.file).split('.mp3', 1)[0].split('/')[-1]
 
 
     ###################################
@@ -50,7 +51,6 @@ def main():
 
         # Print and save the transcription
         if "segments" in transcription_results:
-            song_name = (args.file).split('.txt', 1)[0].split('/')[-1]
             output_transcription = f'lyric_results/{song_name}_({args.model}).txt'
             whisper_script.save_segments_to_file(transcription_results["segments"], output_transcription)
             print("\n=== Transcription Complete ===")
@@ -78,10 +78,10 @@ def main():
         start = time.time()
         audio_analizer.create_mel_spectrogram(f'spectograms/{song_name}.png')
         end = time.time()
-        print(f"mel spectogram created in {end-start} seconds")
+        print(f"mel spectogram created in {end - start} seconds")
 
         start = time.time()
-        audi_features = audio_analizer.analyze(args.verbose)
+        audi_features = audio_analizer.analyze()
         end = time.time()
         print("\n=== Transcription Complete ===")
         print(f"song features extarcted in {end - start} seconds")
@@ -89,7 +89,9 @@ def main():
             for feature_name, feature_values in audi_features.items():
                 print(f"{feature_name}: {feature_values.shape if isinstance(feature_values, np.ndarray) else feature_values}")
 
-
+    if (not (args.mode == 'lyrical' or args.mode == 'instrumental' or args.mode == 'hybrid')):
+        print(f"\"{args.mode}\" is not a valid mode")
+        return
     
     ###################################
     #        Semantic Analysis        #
