@@ -9,7 +9,7 @@ def generate_art_prompt(client, text=None, sentiment=None, analysis_results=None
         if sentiment:
              o_text = f"Sentiment:\n{sentiment}" + o_text
         if analysis_results:
-             lyrical = f"Lyrical Analysis:\n{json.dumps(analysis_results, indent=2)}"
+             lyrical = f"Lyrical Analysis:\n{analysis_results}"
         else:
              lyrical = ""
         if instrumental_analysis:
