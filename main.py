@@ -127,7 +127,23 @@ def main():
     if (args.depth > 2): # currently does not actually use sentiment, needs updating
         try:
             start = time.time()
-            prompt = prompt_script.generate_art_prompt(client, semantics_results['original_lyrics'], semantics_results['detailed_analysis'], "gpt-3.5-turbo")
+            if(args.mode == "lyrical"):
+                prompt = prompt_script.generate_art_prompt(client,
+                                                           text=semantics_results['original_lyrics'],
+                                                           analysis_results=semantics_results['detailed_analysis'],
+                                                           sentiment=semantics_results['hugging_sentiment'],
+                                                           model="gpt-3.5-turbo")
+            elif(args.mode == "instrumental"):
+                prompt = prompt_script.generate_art_prompt(client,
+                                                           instrumental_analysis=audi_features,
+                                                           model="gpt-3.5-turbo")
+            else: # hybrid
+                prompt = prompt_script.generate_art_prompt(client, 
+                                                           text=semantics_results['original_lyrics'], 
+                                                           analysis_results=semantics_results['detailed_analysis'], 
+                                                           sentiment=semantics_results['hugging_sentiment'], 
+                                                           instrumental_analysis=audi_features, 
+                                                           model="gpt-3.5-turbo")
             end = time.time()
             print("\n=== Prompt Generation Complete ===")
             print(f"Time taken: {end-start}")

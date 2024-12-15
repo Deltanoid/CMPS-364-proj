@@ -1,16 +1,30 @@
 import json
-def generate_art_prompt(client, text, analysis_results, model="gpt-3.5-turbo"):
+
+def generate_art_prompt(client, text=None, sentiment=None, analysis_results=None, instrumental_analysis=None, model="gpt-3.5-turbo"):
         """Generate an art prompt based on the analysis."""
+        if text:
+             o_text = f"Original Lyrics:\n{text}"
+        else:
+             o_text = ""
+        if sentiment:
+             o_text = f"Sentiment:\n{sentiment}" + o_text
+        if analysis_results:
+             lyrical = f"Lyrical Analysis:\n{json.dumps(analysis_results, indent=2)}"
+        else:
+             lyrical = ""
+        if instrumental_analysis:
+             instru = f"Instrumental Analysis:\n{instrumental_analysis}"
+        else:
+             instru = ""
+
         prompt = f"""Based on this lyrical analysis, create an artistic prompt for DALL-E.
 
-Analysis:
-{json.dumps(analysis_results, indent=2)}
-
-Original Lyrics:
-{text}
+{lyrical}
+{instru}
+{o_text}
 
 Create a detailed, vivid prompt that:
-1. Captures the essence and emotion of the lyrics
+1. Captures the essence and emotion of the lyrics or music
 2. Incorporates major themes and imagery
 3. Suggests specific visual elements, colors, and composition
 4. Maintains artistic cohesion
