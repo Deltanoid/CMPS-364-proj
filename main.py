@@ -96,14 +96,14 @@ def main():
     ###################################
     #        Semantic Analysis        #
     ###################################
-    if (args.depth > 1 and (args.mode == 'lyrical' or args.mode == 'hybrid')):
-        # api_key = os.getenv('OPENAI_API_KEY') # Get API key from environment variable for security
+    if (args.dept > 1):
+         # api_key = os.getenv('OPENAI_API_KEY') # Get API key from environment variable for security
         # if not api_key:
         #     print(f"Please set the OPENAI_API_KEY environment variable")
         #     return
         api_key = get_api_key()
         client = OpenAI(api_key=api_key)
-
+    if (args.depth > 1 and (args.mode == 'lyrical' or args.mode == 'hybrid')):
         # Initialize generator
         analyzer = sentiments_script.LyricAnalyzer(client, detected_language)
             # Analyze lyrics
