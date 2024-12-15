@@ -70,9 +70,18 @@ Make the analysis rich and specific, but keep each point concise."""
             )
             content = response.choices[0].message.content.strip()
             try:
+                # Attempt to parse the response as JSON
                 return json.loads(content)
             except json.JSONDecodeError:
-                raise ValueError(f"Invalid JSON format returned by GPT: {content}")
+                # If JSON is invalid, sanitize and attempt to fix common issues
+                fixed_content = content.replace("\n", " ").replace("\t", " ")
+                fixed_content = fixed_content.strip()
+
+                try:
+                    return json.loads(fixed_content)
+                except json.JSONDecodeError:
+                    # If still invalid, raise a descriptive error
+                    raise ValueError(f"GPT returned an invalid JSON: {content}")
         except Exception as e:
             raise Exception(f"Error in GPT analysis: {str(e)}")
 
