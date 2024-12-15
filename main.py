@@ -68,20 +68,20 @@ def main():
 
     # background music
     if (args.mode == 'instrumental' or args.mode == 'hybrid'):
-        audio_analizer = instrumentals_script.AudioAnalysis(args.file)
+        audio_analyzer = instrumentals_script.AudioAnalysis(args.file)
 
         start = time.time()
-        audio_analizer.convert_mp3_to_wav()
+        audio_analyzer.convert_mp3_to_wav()
         end = time.time()
         print(f"Conversion from mp3 to wav completed in {end - start} seconds.")
 
         start = time.time()
-        audio_analizer.create_mel_spectrogram(f'spectograms/{song_name}.png')
+        audio_analyzer.create_mel_spectrogram(f'spectograms/{song_name}.png')
         end = time.time()
         print(f"mel spectogram created in {end - start} seconds")
 
         start = time.time()
-        audi_features = audio_analizer.analyze()
+        audi_features = audio_analyzer.analyze()
         end = time.time()
         print("\n=== Transcription Complete ===")
         print(f"song features extarcted in {end - start} seconds")
