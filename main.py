@@ -92,10 +92,39 @@ def main():
     if (not (args.mode == 'lyrical' or args.mode == 'instrumental' or args.mode == 'hybrid')):
         print(f"\"{args.mode}\" is not a valid mode")
         return
-    
+
+    ###################################
+    #             GPT Test            #
+    ###################################
+    # try:
+    #     api_key = get_api_key()
+    #     client = OpenAI(api_key=api_key)
+
+    #     # Send a simple test request to GPT-4o
+    #     chat_completion = client.chat.completions.create(
+    #         messages=[
+    #             {
+    #                 "role": "user",
+    #                 "content": "Say this is a test",
+    #             }
+    #         ],
+    #         model="gpt-4o",
+    #     )
+
+    #     # Print the response from GPT-4o
+    #     print("\n")
+    #     print("GPT-4o response:", chat_completion.choices[0].message.content)
+
+    # except ValueError as ve:
+    #     print(f"ValueError: {ve}")
+    # except Exception as e:
+    #     # Catch and log any other errors
+    #     print(f"Error with GPT-4o: {e}")
+  
     ###################################
     #        Semantic Analysis        #
     ###################################
+
     if (args.depth > 1):
          # api_key = os.getenv('OPENAI_API_KEY') # Get API key from environment variable for security
         # if not api_key:

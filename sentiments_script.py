@@ -62,29 +62,64 @@ Make the analysis rich and specific, but keep each point concise."""
 
         try:
             response = self.client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model="gpt-4o",
                 messages=[
                     {"role": "system", "content": "You are a literary expert specialized in analyzing lyrics and poetry. Provide deep, insightful analysis while maintaining objectivity."},
                     {"role": "user", "content": prompt}
-                ]
+                ],
+                response_format={
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "lyrics_analysis_schema",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "major_themes_and_motifs": {
+                                    "description": "Analysis of major themes and motifs in the lyrics.",
+                                    "type": "string"
+                                },
+                                "emotional_undertones": {
+                                    "description": "Insight into the emotional undertones of the lyrics.",
+                                    "type": "string"
+                                },
+                                "notable_imagery_and_metaphors": {
+                                    "description": "Identification of notable imagery and metaphors.",
+                                    "type": "string"
+                                },
+                                "cultural_or_historical_references": {
+                                    "description": "Explanation of cultural or historical references in the lyrics.",
+                                    "type": "string"
+                                },
+                                "key_symbols_and_their_significance": {
+                                    "description": "Key symbols and their literary significance.",
+                                    "type": "string"
+                                },
+                                "overall_tone_and_atmosphere": {
+                                    "description": "Analysis of the overall tone and atmosphere of the lyrics.",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "major_themes_and_motifs",
+                                "emotional_undertones",
+                                "notable_imagery_and_metaphors",
+                                "cultural_or_historical_references",
+                                "key_symbols_and_their_significance",
+                                "overall_tone_and_atmosphere"
+                            ],
+                            "additionalProperties": False
+                        }
+                    }
+                }
             )
-            content = response.choices[0].message.content.strip()
-            try:
-                # Attempt to parse the response as JSON
-                return json.loads(content)
-            except json.JSONDecodeError:
-                # If JSON is invalid, sanitize and attempt to fix common issues
-                fixed_content = content.replace("\n", " ").replace("\t", " ")
-                fixed_content = fixed_content.strip()
 
-                try:
-                    return json.loads(fixed_content)
-                except json.JSONDecodeError:
-                    # If still invalid, raise a descriptive error
-                    raise ValueError(f"GPT returned an invalid JSON: {content}")
+            return response
+
         except Exception as e:
             raise Exception(f"Error in GPT analysis: {str(e)}")
+        
 
+    # main function to be called
     def analyze_lyrics(self,file_path):
         """Complete semantic analysis pipeline."""
         results = {
