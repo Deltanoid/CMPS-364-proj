@@ -10,3 +10,4 @@ lyric_results/
 spectograms/
 *.Identifier
 *.png
+local_image_script.py

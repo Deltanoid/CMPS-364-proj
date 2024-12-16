@@ -161,7 +161,7 @@ def main():
                                                            text=semantics_results['original_lyrics'],
                                                            analysis_results=semantics_results['detailed_analysis'],
                                                            sentiment=semantics_results['hugging_sentiment'],
-                                                           model="gpt-3.5-turbo")
+                                                           model="gpt-4o")
             elif(args.mode == "instrumental"):
                 prompt = prompt_script.generate_art_prompt(client,
                                                            instrumental_analysis=audi_features,
