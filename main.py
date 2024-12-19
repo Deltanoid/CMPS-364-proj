@@ -161,7 +161,7 @@ def main():
                                                            text=semantics_results['original_lyrics'],
                                                            analysis_results=semantics_results['detailed_analysis'],
                                                            sentiment=semantics_results['hugging_sentiment'],
-                                                           model="gpt-4o")
+                                                           model="gpt-3.5-turbo")
             elif(args.mode == "instrumental"):
                 prompt = prompt_script.generate_art_prompt(client,
                                                            instrumental_analysis=audi_features,
@@ -189,7 +189,7 @@ def main():
     if (args.depth > 3):
         try:
             start = time.time()
-            img_path = art_script.generate_image_with_dalle(prompt, client, song_name)
+            img_path = art_script.generate_image_with_dalle(prompt, client, f"{song_name}_({args.mode})")
             end = time.time()
             print("\n=== Image Generation Complete ===")
             print(f"Time taken: {end-start}")

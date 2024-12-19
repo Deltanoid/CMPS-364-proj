@@ -97,16 +97,17 @@ class AudioAnalysis:
         spectral_contrast = librosa.feature.spectral_contrast(S=mel_spectrogram, sr=sr)
         average_spectral_contrast = spectral_contrast.mean(axis=1)
         avg_contrast = np.mean(average_spectral_contrast) / 100
-
+        print("\n\navg contrast:",avg_contrast)
+        features['average_spectral_contrast'] = avg_contrast
         # Classify the genre based on the average spectral contrast value
-        if avg_contrast < 0.3:
-            features['type'] = "Classical / Ambient / Smooth Instrumental"
-        elif 0.3 <= avg_contrast < 0.5:
-            features['type'] = "Jazz / Pop / Soft Rock"
-        elif 0.5 <= avg_contrast < 0.7:
-            features['type'] = "Rock / Electronic / Hip Hop"
-        else:
-            features['type'] = "Heavy Metal / Noisy / Percussive"
+        # if avg_contrast < 0.3:
+        #     features['type'] = "Classical / Ambient / Smooth Instrumental"
+        # elif 0.3 <= avg_contrast < 0.5:
+        #     features['type'] = "Jazz / Pop / Soft Rock"
+        # elif 0.5 <= avg_contrast < 0.7:
+        #     features['type'] = "Rock / Electronic / Hip Hop"
+        # else:
+        #     features['type'] = "Heavy Metal / Noisy / Percussive"
 
         # Noise and Percussion
         spectral_bandwidth = np.average(librosa.feature.spectral_bandwidth(S=mel_spectrogram, sr=sr))

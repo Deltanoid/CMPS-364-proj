@@ -118,7 +118,7 @@ class AudioAnalysis:
         spectral_contrast = librosa.feature.spectral_contrast(S=mel_spectrogram, sr=sr)
         average_spectral_contrast = spectral_contrast.mean(axis=1)
         avg_contrast = np.mean(average_spectral_contrast) / 100
-
+        print("\n\navg contrast:",avg_contrast)
         # Classify the genre based on the average spectral contrast value
         if avg_contrast < 0.3:
             features['type'] = "Classical / Ambient / Smooth Instrumental"
